@@ -180,13 +180,13 @@
 			There is a scoring system for the computer to determine what a good move is. Kingship and the capture of a normal piece is one point. Capturing an enemy king is 1.5. The system is used to play through a tree of all a colour’s possible moves to a limitation of a few jumps. Each time it updates a path’s score and appends it to a list. At the end of the tree it chooses a high score, or between equivalent scores randomly.This randomness ensures that because it scans from the top left down, that it won’t consistently pick the move of equal score on the left of its square. That would be too predictable. For example, in this scenario (Figure 1), black (2) has to move. If either piece moves diagonally towards the white piece (1), it will be jumped, causing score of -1. The best score is equally for each piece to move diagonally away from the white 1 for a superior score of 0.  The computer will randomly provide the coordinates below because they are equal in value. if not for the randomness, it would always choose the leftmost move because it scans moves from the left. To interpret them, they are read as the first square number moves to the second square number (so square 46 --> square 55).
 
 			</p>
-			<img src="fig1.jpg">
+			<img src="fig1.JPG">
 			<p>
 			In this following example (Figure 2), we see that the best possible move is for the middle black to move diagonally toward the white piece. This traps white on the next turn for a definite black victory. Wins are calculated as being many times more valuable than regular moves. They are calculated by dividing a sufficiently large 600 by the number of moves it takes. This way a win is valued in terms of hundreds, which automatically outcompetes regular multi-jump moves that may gain only double digits. They can be compared against possible wins that take different amounts of moves to achieve, so that a win in 1 move is (600/1) is more valuable than a win in three moves (600/3). If we take away the possibility of an instant win, such as in Figure 3, we see that this changes.
 
 			</p>
-			<img src="fig2.jpg">
-			<img src="fig3.jpg">
+			<img src="fig2.JPG">
+			<img src="fig3.JPG">
 			<p>
 			Figure 3 shows an interesting limitation of the algorithm. It successfully determines that whilst being under attack from the white king, any move is equivalent here for the next 3 moves. If black attains kingship, it will have +1 from getting a king, but -1 from white’s king capturing the middle piece. This results in 0. It will also get 0 if the middle piece moves away from the middle, because white’s king could chase it and neither side would gain more than 0. This illustrates that it can only decide based on a predetermined amount of moves. A human player would probably not opt to gain a king at the expense of a piece, and I would expect that this is because a human is aware of its possible value over the duration of the entire game, not just over the next 3 moves. Additionally, if there are two pieces so far apart that the number of moves calculated in advance does not put them in contest, then they tend to move randomly. For instance, if they are so far apart that the number of moves looked ahead only permits that the pieces contest each other once, such that they receive an insignificant score, say zero, they won’t know to move closer to each other to improve their opportunities of capturing so they wander.
 			</p>
@@ -195,7 +195,7 @@
 			<br><br>
 			[[16, 7], 1, [21, 7], 1, [21, 28], 0, [21, 30], 0, [21, [3, 17, 35]], 3, [53, 44], 0, [53, 39], 1.5]
 			</p>
-			<img src="fig4.jpg">
+			<img src="fig4.JPG">
 			<p>
 			Some functions included in the program can decide whether a move is legal or not, choose the highest possible move for a colour, execute that move, capture pieces, or upgrade a piece to a king.
 
@@ -216,7 +216,7 @@
 			</p>
 			
 			<h3>The Board</h3>
-			<img src="figboard.jpg">
+			<img src="figboard.JPG">
 			
 			<p>
 			Figure 4a shows the current version of the board with two quarters on it. I admit that it was somewhat tricky to capture an image that looked clean, as the board is clear Plexiglas and shows the wiring underneath it. 
@@ -244,7 +244,7 @@
 			I have made a function ArmAngles2() that takes in a desired XYZ point and returns the corresponding servo angles which position the end at that point. It does this by representing the arm as several right angle triangles that are related and using right angle math.
 			Below we can see what angles are returned for if we want the endpoint to be at (3,4,2).
 			</p>
-			<img src="figarm.jpg">
+			<img src="figarm.JPG">
 			
 			<div id="finthoughts"><h3 >Thought on Bot</h3>
 			<p>
@@ -280,7 +280,7 @@
 				<p>
 			Here is essentially the same design, except I used 330 Ohm resistors instead. 
 			</p>
-			<img src="hbridge.jpg">
+			<img src="hbridge.JPG">
 			
 			
 		</section>
