@@ -1,0 +1,818 @@
+__author__ = 'Tom MacIntyre april24 2017'
+import math
+import sys
+import random
+
+################1 and 3 are white on the bottom to start. 2 and 4 are black on the top.
+board=[
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 2, 0, 2, 0, 0, 0, 1,
+    0, 0, 0, 0, 3, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 4, 0, 0,
+    0, 0, 0, 0, 1, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    ]
+"""initialise game
+2, 0, 2, 0, 2, 0, 2, 0,
+0, 2, 0, 2, 0, 2, 0, 2,
+2, 0, 2, 0, 2, 0, 2, 0,
+0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0,
+0, 1, 0, 1, 0, 1, 0, 1,
+1, 0, 1, 0, 1, 0, 1, 0,
+0, 1, 0, 1, 0, 1, 0, 1,
+"""
+boardcpy=[
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    ]
+boardcpy2=[
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    ]
+
+###shows the board
+def showB():
+
+    i=0
+    print()
+    print("1  2  3  4  5  6  7  8\n")
+    while (i<64):
+
+        print(board[i], " ", end="")
+        i+=1
+        if i%8==0:
+            print(" ",int(i/8)*8)
+#printB()
+def showBcpy2():
+
+    i=0
+    print()
+    print("1  2  3  4  5  6  7  8\n")
+    while (i<64):
+
+        print(boardcpy2[i], " ", end="")
+        i+=1
+        if i%8==0:
+            print(" ",int(i/8))
+# ###########
+def AintoB(firstboardlist, secondboardlist):
+
+    i=0
+    while i<len(firstboardlist):
+        secondboardlist[i]=firstboardlist[i]
+        i+=1
+#print(boardcpy)
+#AisB(board, boardcpy)
+#print(boardcpy)
+def row(square):
+    ##this function returns the row number of a square
+    #square=square-1#turns
+    i=8
+
+    while(i!=-1):
+        if (square<i):
+            row=i/8
+            #print("row ", row)
+            i=-1
+        else:
+            i+=8
+    return row
+#print(row(63))
+#returns index coordinate of possible moves and its score. does not account double jumps
+#####moves possible
+def movesP(a):######IMPORTANT NOTE: TWICE NOW THERE HAS BEEN A BUG WHERE 65 SHOULD BE 64. it has to do with the index
+#  bounds
+    movesparray=[]
+    lastarraylen=0
+
+    a=a-1##translates to index from normal numbering scheme
+    ###there must be a piece to move
+    #print("A is->", a)
+    if (board[a]==1 or board[a]==2 or board[a]==3 or board[a]==4):
+
+        shift=0
+        direction=1
+        while(direction<5):##########  this stuff with shift checks each quadrant for a possible move
+
+            if direction==1:
+                shift=-9
+            elif direction==2:
+                shift=-7
+            elif direction==3:
+                shift=7
+            elif direction==4:
+                shift=9
+            else:
+                print("Error1")
+
+            #########    Prevents regular pieces going backwards\/
+
+            if (shift<0 and board[a]==2):  ## if a normal black piece, it cant move up
+                #print("Piece movement restriction")
+                print()
+            elif (shift>0 and board[a]==1):## if a normal white piece, it cant move down
+                #print("Piece movement restriction")
+                print(end='')
+
+            #########    Neutral move\/
+
+            ##if the move is within board bounds and also on a diagonal to the square
+
+            elif (a+shift>0 and a+shift<64 and abs((row(a)-row(a+shift)))==1 and (board[a+shift]==0)):
+
+                movesparray.append(a+1+shift)#logs coordinate
+                movesparray.append(0)#######logs score (its neutral in this case so 0)
+
+            #########    Capture move\/
+
+            elif (a+shift+shift>0 and a+shift+shift<64 and abs((row(a)-row(a+shift+shift)))==2.0):#within bounds and
+            #  on diagonal
+                ##first diagonal must be different piece and second diagonal must be empty to jump to
+                if ((board[a+shift]!= board[a]) and (abs(board[a+shift]-board[a])!=2) and (board[a+shift+shift]==0)):
+
+                    movesparray.append(a+1+shift+shift)#logs coordinate
+                    if (board[a+shift]-2>0):##logs score for a jump. -2 represents king piece 4 and 3
+                        movesparray.append(1.5)##you get 1.5 points for killing a king
+                        #print("Captures King+1.5")
+                        print(end='')
+                    else:
+                        movesparray.append(1)## one point for a normal capture
+                        #print("Captures piece+1")
+                        print(end='')
+            else:
+                #print("Illegal move")
+                print(end='')
+            ###########     Addresses Kingship\/
+
+            if len(movesparray)>0 and len(movesparray)!=lastarraylen:
+
+                if ((board[a]==2 and 56<movesparray[-2]<64) or (board[a]==1 and 0<movesparray[-2]<9)):
+                ##### if either colour soldier reaches their kinging side
+                    #print("movesparray", movesparray)
+                    print()
+                    movesparray[-1]+=1##### the '-1' counts items from the right, so it should upgrade the score by +1.
+
+                    lastarraylen=len(movesparray)# this tells it next time it goes through not to upgrade for the
+                    # same move
+                    #print("All Hail the  King+1")
+                    print(end='')
+
+            direction+=1
+    else:
+        #print("a is not a piece to be moved.")
+        print(end='')
+
+    return movesparray
+########################
+#print(movesP(64))
+#MOVES A PIECE. ACCOUNTS FOR CAPTURES. and kingship.
+def moveit(square, dest):####takes in human index. moves a piece to another square and if it captures a piece
+# then make
+# the captured square 0
+    if board[square-1]==0:
+        print("Note that there is no actual piece at ", square)
+
+    if abs(row(square-1)-row(dest-1))==2:##if its considered to be a jump
+        board[int(dest+((square-dest)/2)-1)]=0 ##this represents the square being jumped in comp index
+        #note: Im pretty sure dividing was returning it as a float so It's cast as int
+
+   ####now to account for kingship\/
+    if board[square-1]==2 and 56<(dest-1)<65:##if black reached white side upgrade to king
+        board[dest-1]=4
+        board[square-1]=0
+    elif board[square-1]==1 and -1<(dest-1)<9:###if white reaches black side upgrade to king
+        board[dest-1]=3
+        board[square-1]=0
+    else:
+        board[dest-1]=board[square-1]
+        board[square-1]=0
+#####check array1, if jump, make array2 with movesP(), for every jump in array2, append list of [dest1, dest2,
+# and an updated score]
+#inputs human index square
+#moveit2 accounts for multijumps
+def moveit2(square, dest):
+    if sys.getsizeof(dest)>36:
+        i=0
+        a=square
+        while (i<len(dest)):
+            moveit(a, dest[i])
+            a=dest[i]
+            i+=1
+    else:
+        moveit(square, dest)
+def jumps( a):########
+
+    moves=movesP(a)
+    jumps=[]
+    #print("array1!", array1)
+
+    i=0
+    while(i<len(moves)):###checks array
+        ####checks even items /only coordinates
+        #print("row(a-1): ",row(a-1),"row(moves[i]): ",row(moves[i]))
+        #print("abs(row(a-1)-row(moves[i-1])):  ",abs(row(a-1)-row(moves[i]-1)))
+        if abs(row(a-1)-row(moves[i]-1))==2:####if the origin and dest row dif is a jump
+            #print(array1[i],"is a jump")
+            jumps.append(moves[i])
+            jumps.append(moves[i+1])
+        i+=2
+
+    #print(jumps)
+    return jumps
+####Ran into a bug where [list].remove(object) would mess up the moves array because there would be a duplicate value
+#  and it would delete the lowest one. this rmv function deletes the index of an array
+def rmv(list, index):
+    if index>len(list):
+        print("The index",index," doesnt match the length ",len(list),"of the list")
+    else:
+        listcpy=[]
+        i=0
+        while i<len(list):
+            if i==index:
+                print()
+            else:
+                listcpy.append(list[i])
+            i+=1
+        return listcpy
+#NOTE: This mutijump function is not 100% perfect but it is reeeeeaal good and the complexity of the jump sequences that
+#  it messes up are totally not even going to show up in real games because they are ludicrous.
+def getM(a):
+    AintoB(board, boardcpy)
+    moves=movesP(a)
+    i=0
+    while i<len(moves):
+        element=moves[i]
+        if element in jumps(a):
+            moveit(a, element)##move to a first jump
+            if sys.getsizeof(jumps(element))>36:#at the first jump, when there is more to go
+                hops=jumps(element)
+                c=0
+                while c<len(hops):
+                    path=[]
+                    path.append(element)
+                    path.append(hops[c])
+                    moves.append(path)
+                    moves.append(moves[i+1]+hops[c+1])
+                    c+=2
+                moves=rmv(moves,i)
+                moves=rmv(moves,i)
+                i-=2
+        i+=2
+        ##########now there are double jumps that might have further to go in their jump sequence
+        AintoB(boardcpy, board)####resets the board to 'a'
+        u=0
+        while u<len(moves):
+            if sys.getsizeof(moves[u])>36:####now we are only looking for double jump list values to improve upon
+                element=moves[u]
+                start=a
+                r=0
+                while r<len(element):##this moves the piece to the end of the element to be assessed for jumps
+                    dest=element[r]
+                    moveit(start, dest)
+                    start=dest
+                    r+=1
+                if sys.getsizeof(jumps(element[-1]))>36:###if the double jump has more to go
+                    hops=jumps(element[-1])
+                    y=0
+                    while y<len(hops):
+                        path=[]
+                        t=0
+                        while t<len(element):###should give [1,2,4] not [[1,2],4]
+                            path.append(element[t])
+                            t+=1
+                        path.append(hops[y])
+                        moves.append(path)
+                        moves.append(moves[u+1]+hops[y+1])
+
+                        y+=2
+                    moves=rmv(moves,u)
+                    moves=rmv(moves,u)
+                AintoB(boardcpy, board)####resets the board to 'a'
+            u+=2
+    return moves
+#print(getM(23))
+######takes in a moves list and finds at the least index the turn (squarenumber, score) with the greatest score and
+# returns that
+def highestTurn(moves):
+    turn=[-1,-1]
+    score2=-1
+    i=0
+    while i<len(moves):
+        score1=moves[i+1]
+        if score1==score2:##this will mean that the program is less predictable if there is an equal score it might
+            # assign an equivalent score or it might not randomly
+            if random.choice([-1,1])>0:
+                turn[0]=moves[i]
+                turn[1]=moves[i+1]
+        elif score1>score2:
+            turn[0]=moves[i]
+            turn[1]=moves[i+1]
+
+        score2=moves[i+1]
+        i+=2
+    return turn
+##bestm if flawed. it chooses the greatest score of possible moves. doesnt use look ahead tree.
+def bestM(colour_2_or_1):##returns list
+    bestTurn=[-1,-1]
+    i=0
+    if colour_2_or_1==2:########if b, cycle through board, compare the highest moves for each black piece and find
+    # the greatest one. ditto for white.
+        while i<len(board):
+            if board[i]==2 or board[i]==4:
+                moves=getM(i+1)#remember most functions take a human index. now we have the moves for that
+                # square
+                hturn=highestTurn(moves)
+                if hturn[1]==bestTurn[1]:##this will mean that the program is less predictable if there is an equal score it
+                # might
+                    # assign an equivalent score or it might not randomly
+                    if random.choice([-1,1])>0:
+                        bestTurn=highestTurn(moves)
+                        bestTurn.append(i+1)
+                if hturn[1]>bestTurn[1]:
+                    bestTurn=highestTurn(moves)
+                    bestTurn.append(i+1)
+            i+=1
+        return bestTurn
+    if colour_2_or_1==1:########if b, cycle through board, compare the highest moves for each black piece and find
+    # the greatest one. ditto for white.
+        while i<len(board):
+            if board[i]==1 or board[i]==3:
+                moves=getM(i+1)#remember most function s take a human index. now we have the moves for that
+                # square
+                hturn=highestTurn(moves)
+                if hturn[1]==bestTurn[1]:##this will mean that the program is less predictable if there is an equal score it
+                # might
+                    # assign an equivalent score or it might not randomly
+                    if random.choice([-1,1])>0:
+                        bestTurn=highestTurn(moves)
+                        bestTurn.append(i+1)
+                if hturn[1]>bestTurn[1]:
+                    bestTurn=highestTurn(moves)
+                    bestTurn.append(i+1)
+            i+=1
+        return bestTurn
+    else:
+        print("I doubt you entered either 'b' for black or 'w' for white in bestM()")
+#servo degrees turns into dutycycle number
+def dutycycle(deg):
+    return ((deg/180)*10)+2.5
+#print(dutycycle(45))
+#Triangle figurouter
+def brdtopin(index):
+    y=(int((index-1)/8)+1)
+    x=int(((index-1)-(8*(y-1)))/2)+1
+    pinordinate=[x,y]
+    return pinordinate
+
+#print(brdtopin(64))
+def pintobrd(xylist):
+    if xylist[1]%2==0:
+        return (xylist[0]*2)+(xylist[1]-1)*8
+    else:
+        return (xylist[0]*2)-1+(xylist[1]-1)*8
+#print(pintobrd([1,8]))
+
+def armAngles2(x,y,z):
+    angles=[-1,-1,-1]
+    angles[0]=math.degrees(math.atan(x/y))
+    b1=math.degrees(math.atan(z/(math.sqrt((x*x)+(y*y)))))
+    b2=math.degrees(math.acos( (.5*(math.sqrt((math.sqrt((x*x)+(y*y)))+z)))/7 ))
+    angles[1]=b1+b2
+    angles[2]=2*(-90-b2+180)
+    return angles
+#print(armAngles2(3,4,2))
+###########lists all possible moves for either black2 or white1
+def listM(colour_2_or_1):
+    moves=[]
+    if colour_2_or_1==2:
+        a=2
+        b=4
+    if colour_2_or_1==1:
+        a=1
+        b=3
+    i=0
+    while i<len(board):
+        if board[i]==a or board[i]==b:
+            if sys.getsizeof(getM(i+1))>36:#if there are any moves
+                element=getM(i+1)
+                t=0
+                while(t<len(element)):
+                    frmtmove=[(i+1), element[t]]
+                    moves.append(frmtmove)
+                    moves.append(element[t+1])
+                    t+=2
+        i+=1
+
+    return moves
+#listM(2)
+#print(len(listM(2))+len(listM(1)))
+def tree(pathf, absscrf, relscrf, i, brnchnum):
+    #####################Colour
+    if ((brnchnum%2)==0):###flips what colour is being run ever segment
+        colour=2
+    else:
+        colour=1
+    ###return this list from the function. initialised.
+    list=listM(colour)##gives list of possible moves for the colour
+    print("T=",brnchnum, "=", list)
+
+    if (i<len(list) and i>=0):##if the counter is within the moves list then do something, else return -1
+
+        element=list[i]##gives either coordinates or score
+        moveit2(element[0], element[1])####moves the piece for next branch to assess possible moves from
+        pathf.append(element)
+        print("PAAAAAAAAAATH ", pathf)
+        absscrf+=list[i+1]###always add the score of a move to absolute scr
+
+        if(brnchnum%2==0):##branchnumber is t or how many segments down the branch this moveset is. two iterations
+        #  the second branch and therefore the opposite colour.
+            relscrf+=list[i+1]##if the branch is even then add the score of the move
+        else:
+            relscrf-=list[i+1]#if odd then sub the score of the move
+
+        ###if i is greater than the length of the list return it as -1 to indicate that
+    ##################Updates return values list
+    length=(len(list)-1)
+    ret=[pathf, absscrf, relscrf, length]
+    ret[1]=absscrf
+    ret[2]=relscrf
+    ret[3]=length
+
+    return ret
+"""
+def think(howfarahead):##executes for black
+    AintoB(board, boardcpy2)###stores current board in the copy so it can be reset with the copy later
+
+    absscrd=0####absolute score desired
+    relscrd=0####relative score desired
+    absscrf=0####absolute score found
+    relscrf=0####relative score found
+    pathd=[]###path desired
+    pathf=[]###path found
+    ilist=[]###list of counter values for each seg of tree branch
+    filtresult=[pathd, absscrd, relscrd]####this list will be returned by this function
+    seg=howfarahead#####how many segments to have in a branch/how far to look ahead
+    while (len(ilist)<seg):##this inits the counter list with the number of segments so if seg=4 ilist=[0,0,0,0]
+        ilist.append(0)
+
+    t=0
+    while(t!=-1):
+        filtresult[0]=pathd
+        filtresult[1]=absscrd
+        filtresult[2]=relscrd
+        print("\nT is ", t)
+        print("FOUND", pathf, absscrf, relscrf)
+        print("DESIRED", filtresult)
+
+        ##########################Execute Tree Segment
+        result=tree(pathf, absscrf, relscrf, ilist[t], t)
+
+        pathf=result[0]
+        absscrf=result[1]
+        relscrf=result[2]
+        print("ilist", ilist)
+
+        if(t==seg-1):####end of branch
+            ilist[t]+=2
+            if(result[3]<ilist[t]):
+                z=0
+                while(z<seg):
+                    if(z>=t):
+                        ilist[z]=0
+                    z+=1
+                ilist[t-1]+=2
+            t=0
+            print("End Of TREE\n  Absscrf=", absscrf,"\n  Relscr", relscrf)
+            AintoB(boardcpy2, board)##if t is a multiple of seg, then its reached the end of a branch and should reset
+            #  the board for the next branch
+
+            if(absscrf>absscrd):##if scores found are better than our current desired scores,
+                absscrd=absscrf# upgrade desired scores AND PATH
+                relscrd=relscrf
+                pathd=result[0]
+                pathf=[]
+                absscrf=0
+                relscrf=0
+            elif(absscrf==absscrd):
+                if(relscrf>relscrd):
+                    absscrd=absscrf# upgrade desired scores AND PATH
+                    relscrd=relscrf
+                    pathd=result[0]
+                    pathf=[]
+                    absscrf=0
+                    relscrf=0
+                elif(relscrf==relscrd and random.choice([0,1])):
+                    absscrd=absscrf# upgrade desired scores AND PATH
+                    relscrd=relscrf
+                    pathd=result[0]
+                    pathf=[]
+                    absscrf=0
+                    relscrf=0
+                else:
+                    absscrf=0# upgrade desired scores AND PATH
+                    relscrf=0
+                    pathf=[]
+            else:
+                absscrf=0# upgrade desired scores AND PATH
+                relscrf=0
+                pathf=[]
+            #######
+
+        else:
+            if(t==0):
+                if(result[3]<ilist[0]):
+                    print("BREAK")
+                    break
+            if(result[3]<ilist[t]):
+                ilist[t-1]+=2
+                ilist[t]=0
+            t+=1
+
+
+        ##################### Upgrade or not / Reset board
+
+    AintoB(boardcpy2, board)##if t is a multiple of seg, then its reached the end of a branch and should reset
+            #  the board for the next branch
+
+
+    return filtresult
+"""
+def initfrom(lists, indext):##sets lists above indexT to []
+
+    w=0
+    while (w<len(lists)):
+        if (w>=indext):
+            lists[w]=[]
+        w+=1
+    return lists
+def pickscr(t, list):##chooses either the max or min of a list depending on od or even tier number
+    if (t%2==0):
+        pick=max(list)
+    else:
+        pick=min(list)
+    return pick
+def scrsum(t, scr, value):
+
+    if (t%2==0):
+        scr=scr+value
+    else:
+        scr=scr-value
+    return scr
+
+def think(Effort_0to3):###breaks if starts with no moves
+    boardcpy=[
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        ]
+    boardcpy2=[
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        ]
+    AintoB(board, boardcpy2)###stores current board in the copy so it can be reset with the copy later
+    scr=0
+    slist=[-1000,[],[],[],[]]
+    coord=[]
+    i=[0,0,0,0,0]
+    brk=0
+    firstmoveslist=listM(2)
+    while(brk==0):
+        t=0
+        while(1):
+            ############colour flipper
+            if ((t%2)==0):###flips what colour is being run every segment
+                colour=2
+            else:
+                colour=1
+            ############gets list
+            mlist=listM(colour)
+
+            if (len(mlist)==0):##this scenario executes when something has lost/ no moves possible
+                if (t==0):
+                    coord=[-1,-1]
+                    print("black loses")
+                    brk=-1
+                    break
+
+                i[t]+=2
+                slist=initfrom(slist, t+1)##this clears the score values above the current tier
+                slist[t].append(600/t)
+                t=0
+                if (1 in board and 3 in board)==False:
+
+                    coord=firstmoveslist[t]
+                    brk=-1
+                    break
+
+                AintoB(boardcpy2, board)
+            elif (i[t]>(len(mlist)-1)):##counter exceeds list
+                if (t==0):
+                    AintoB(boardcpy2, board)
+                    brk=-1
+                    break###<----------?
+                else:
+                    #do score stuff
+                    if (t==1):
+                        if((pickscr(t, slist[t]))>slist[0] or ((pickscr(t, slist[t]))==slist[0] and random.choice([0,1]))):
+                            #print("T is", t)
+                            #print("pickscr(t, slist[t])", pickscr(t, slist[t]))
+                            #print(slist[t]," vs ",slist[0])
+                            slist[0]=(pickscr(t, slist[t]))
+                            coord=firstmoveslist[i[0]]#if the score picked from tier 1 is better than or randomly
+                            # equal to score at tier0 then replace/store that score in slist[0] and replace the
+                            # coordinate
+
+                        initfrom(slist, 1)
+
+                    else:
+                        slist[t-1].append(pickscr(t, slist[t]))#add current tier pick to previous tier score list
+                        slist[t]=[]#init current tier score
+                        scr=0#also init running score
+                    #do counter stuff
+                    i[t]=0
+                    i[t-1]+=2
+                    t=0
+                    AintoB(boardcpy2, board)
+            elif (i[t]<(len(mlist)-1)):
+                ############Moves the piece
+                element=mlist[i[t]]###gives coordinates
+                moveit2(element[0], element[1])####moves the piece for next branch to assess possible moves from
+                scr=scrsum(t, scr, mlist[i[t]+1])
+                #print("i",i)
+                #print("slist",slist)
+                #print("coord",coord)
+                #print("t is", t)
+                #showB()
+                if (t==1+Effort_0to3):
+                    slist[t].append(scr)
+                    scr=0
+                    i[t]+=2
+                    t=0
+                    AintoB(boardcpy2, board)
+                else:
+                    t+=1
+            else:
+                print("something wrong has happened with the logic here, i dunno")
+
+    return coord
+#print(think(2))
+
+def think2():
+    AintoB(board, boardcpy2)
+    i=[0,0,0,0,0]
+    s=[[],[],[],[],[]]
+    coord=[-1,-1]
+    scr=0
+    t=0
+    while 1:
+
+        if t%2==0:
+            colour=2
+            pol=1
+        else:
+            colour=1
+            pol=-1
+        mlist=listM(colour)
+        #print(mlist)
+        #print(t)
+        #print(i)
+        AintoB(board, boardcpy)
+
+        if(len(mlist)-1==0):
+            s[t]=600/t
+            i[t]+=2
+        elif(i[t]>len(mlist)-1):
+            scr=0
+            if colour==2:
+                s[t-1].append(max(s[t]))
+            else:
+                s[t-1].append(max(s[t]))
+            if t==0:
+                return coord
+            i[t]=0
+            i[t-1]+=2
+            t=0
+
+            AintoB(boardcpy2, board)
+
+
+        elif(i[t]<len(mlist)-1):
+
+            moveit2(mlist[i[t]][0], mlist[i[t]][1])
+            #print(colour, "colour")
+            showB()
+            if t==3:
+                s[t].append(scr+(pol*(mlist[i[t]+1])))
+                print("s", s)
+                print("End of seg")
+                i[t]+=2
+                AintoB(boardcpy, board)
+                print("Conclusion")
+
+            else:
+                scr+=pol*(mlist[i[t]+1])
+                print("s", s)
+                print("mlist[i[t]", mlist[i[t]])
+                t+=1
+
+        else:
+            print("i dunno what happened")
+
+
+def scnboard():#sets old board to new board and includes list of tiles to rmv
+    import RPi.GPIO as GPIO
+    import time
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(4, GPIO.OUT)
+    GPIO.setup(17, GPIO.OUT)
+    GPIO.setup(27, GPIO.OUT)
+    GPIO.setup(22, GPIO.OUT)
+    piny=[5, 6, 13, 19, 26, 16, 20, 21]
+    a=0
+    while a<8:
+        GPIO.setup(piny[a], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        a+=1
+    newboard=[
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    ]
+
+    pinx=[4, 17, 27, 22]
+    piny=[5, 6, 13, 19, 26, 16, 20, 21]
+    a=0
+    b=0
+    while a<4:
+        GPIO.output(pinx[a], 1)
+        while b<8:
+            if GPIO.input(piny[b]):##if a piece is there then its is 1 in the list
+                newboard[pintobrd([b+1, a+1])-1]=1
+            b+=1
+
+        GPIO.output(pinx[a], 0)#tie low before moving on to the next one
+        a+=1
+    a=0
+    pieceval=-1#value of square that moves
+    piecedest=-1#square number where it ends up in human value
+    rmv=[]#contains human value squares
+    while a<(board+1):##should the length of board include +1??
+        if (board[a]==1 or board[a]==3) and newboard[a]==0:#this piece was the one moved
+            pieceval=board[a]
+            board[a]=0
+        elif board[a]!=0 and newboard[a]==0:#this piece was removed
+            rmv.append(a+1)
+            board[a]=0
+        elif board[a]==0 and (newboard[a]==1):
+            piecedest=(a+1)
+            if piecedest<9 and piecedest>0:#kingship on top row frm human val
+                pieceval=3
+            board[a]=pieceval
+        else:
+            print("sumthin happened wrongly")
+        a+=1
+    print("rmv ", rmv)
+    GPIO.cleanup()
+
+#print(think(2))
+#print(think2())
+#print(listM(1))
+while 1:
+    showB()
+    cmnd1=int(input("Move what square: "))
+    cmnd2=int(input("To where?: "))
+    moveit2(cmnd1, cmnd2)
+    a=think(2)
+    showB()
+
+    moveit2(a[0],a[1])
