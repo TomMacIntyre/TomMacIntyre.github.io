@@ -122,6 +122,7 @@
 		text-decoration:none;
 		color:inherit;
 	}
+	
 	#portrait{width:350px;}
 	#botsquirrel{width:560px; margin-left:4%; }
 	#Dotsvid{ width:300px; ; margin:20px;}
@@ -134,7 +135,7 @@
 	
 	#keyboardimg{display:inline-block;float:right; margin:20px; }
 	#passes{display:inline-block;min-width:360px;}
-	
+	#pics{display:inline-block; min-width:1000px;}
 	</style>
 	
 	</head>
@@ -171,52 +172,69 @@
 		
 		<section>
 			<h2 id="Dotbot">Pointillism Printer</h2>
-			<img id="portrait" src="portrait.JPG">
-			<img id="botsquirrel" src="botsquirrel.JPG">
-			<p>
-			The 'H' shaped contraption depicted above right is an XY printer similar to a pen plotter. It uses various markers and pens to dot onto a medium and create spotty images, such as this self portrait.
-			
-			As you should see in the photo, the printer is made of steel bars, a little servo arm that raises and lowers the marker, verticle and horizontal sliders, corner peices, timing belt, and two stepper motors hidden partially in their housings. 
-			All of it is attached to a Raspberry Pi with an attached Arduino microcontroller. I modeled the joints and sliders in Fusion 360 and had them 3D printed with PLA. The prints suffered warping. This was probably due to how fast they were printed off, as when some plastics are printed quickly, the change in temperature from when the filament melts and when it cools causes warpage. Incidentally, Nylon is supposed to be especially susceptible for warping. This critical issue was overcome surprisingly well with some choice expletives and a nauseating amount of superglue.
-			</p>
-						<video id="Dotsvid" controls >
-			  <source src="Dots.mp4" type="video/mp4">			  
-			  Your browser does not support the video tag.
-			</video>
+			<div id="pics">
+				<img id="portrait" src="portrait.JPG">
+				<img id="botsquirrel" src="botsquirrel.JPG">
+			</div>
 			<p>
 			The machine was inspired by pointillism, an art style by the french painter Georges Seurat who is most famously known for his work 'A Sunday Afternoon on the Island of La Grande Jatte (1884–1886)'. 
 			</p>
 			<p>
-			The self-portrait above was made on marker paper with a fine tip sharpie of approx 2mm in diameter. Stepper motors are motors that are designed to produce strong and precise revolutions. They are also very slow. I thought they would be faster when I got them. Resolution makes a huge difference in print time due to the amount of time it takes to produce each dot, and the flaw may be fixed in the future, however this print took about 4.5 hours. I will likely fix it by increasing the circumference of the wheel the belt is attached to so that the motors will be just as slow, but their revolutions will be faster.
+			The 'H' shaped contraption depicted above right is an XY printer similar to a pen plotter. It uses various markers and pens to dot onto a medium and create spotty images, such as the above self portrait.The portrait was made on marker paper with a fine tip sharpie of approx 2mm in diameter. 
 			</p>
 			<p>
-			Another interesting obstacle is the sleight white horizontal streaks through the image. I suspect that these are due to belt tension, but mostly to the fact that I had to make mechanical sacrifices because of a last minute material sourcing issue. Basically I had to sand something because the part was not to my specs and now it wiggles a millimeter to either side.
-			</p>			
+			As you should see in the photo, the printer is made of steel bars, a little servo arm that raises and lowers the marker, verticle and horizontal sliders, corner peices, timing belt, and two stepper motors hidden partially in their housings. 
+			All of it is attached to a Raspberry Pi with an attached Arduino microcontroller. I modeled the joints and sliders in Fusion 360 and had them 3D printed with PLA plastic. 
+			</p>
+			<p>
+			
+			</p>
+
+
+						<video id="Dotsvid" controls >
+			  <source src="Dots.mp4" type="video/mp4">			  
+			  Your browser does not support the video tag.
+			</video>
+			<p>The major principle of pointillism is that with basic primary colours, you can dot them close together in various amounts and your eye blends them together from afar. Below is a magnified picture of a rose leaf image to show the seperate dots better.
+			</p>
+			  
+			<img id="upclose" src="upclose.JPG" >
+
+			<p>
+			Now to address some bumps in the road.<br>
+			</p>
+			<p>
+			The 3D printed components suffered warping. This was probably due to how fast they were printed off, as when some plastics are printed quickly, the change in temperature from when the filament melts and when it cools causes warpage. Incidentally, Nylon is supposed to be especially susceptible for warping. This critical issue was overcome surprisingly well with some choice expletives and a nauseating amount of superglue.
+			</p>
+			<p>
+			The printer uses stepper motors that are designed to produce strong and precise revolutions. They are also very slow. I thought they would be faster when I got them. Resolution makes a huge difference in print time due to the amount of time it takes to produce each dot, and the flaw may be fixed in the future, however this print took about 4.5 hours. I will likely fix it by increasing the circumference of the wheel the belt is attached to so that the motors will be just as slow, but their revolutions will be faster.<br><br><br><br>
+			</p>
+			
 			<p>
 			The bot was initially designed for black and white, although colour images can be achieved by running three passes using CYMK process colours. The K in CMYK stands for black, which I don't actually use. We can see the stages of a colour print below.
 			</p>
-			<br><br>
+			
 			<p>
-			We can clearly see the Cyan colouring, followed by a yellow pass. Recall that blue and yellow make green. Finally there is a Magenta pass bringing it all together.
+			We can clearly see the cyan colouring, followed by a yellow pass. Recall that blue and yellow make green. Finally there is a magenta pass bringing it all together.
 			</p>
 			<div id="passes">
 				<img id="poolblue" src="poolblue.JPG" >
 				<img id="poolyellow" src="poolyellow.JPG">
 				<img id="poolfinal" src="poolfinal.JPG">
 			</div>
-			<p>The major principle of pointillism is that with basic primary colours, you can dot them close together in various amounts and your eye blends them together from afar. Below is a magnified picture of a rose image to show the seperate dots better.
-			</p>
-			  
-			<img id="upclose" src="upclose.JPG" >
+			
 			<p>
 			The programming was rather involved at first. I learned quite alot along the way though! Mostly, the Pi uses python's image library (PIL) to interpret image data. The thing about grayscale is that there is only one colour, but many different amounts of it. A marker cannot produce gradient like there is in a grayscale image. You cannot really shade with markers the way you would with a pencil. For this reason I used something called dithering, which turns images with gradient into dots.
-			There are many kinds of dithering as you can see below, but I chose Floyd-Steinberg because it seems to be the standard.
-			I also coded my own dithering program that does Floyd-Steinberg dithering. It includes a threshold that you can set to produce more or less dots. I've also coded a script for the colour prints that splits the image into three seperate images of each primary colour, which is then converted to grayscale and dithered. This way when they are superimposed you get the colour gradient we saw above.
 			</p>
+			<p>
+			There are many kinds of dithering as you can see below, but I chose Floyd-Steinberg because it seems to be the standard.
+			I also coded my own dithering program that does Floyd-Steinberg dithering. It includes a threshold that you can set to produce more or less dots. Additionally I coded a script for the colour prints that splits the image into three seperate images of each primary colour, which is then converted to grayscale and dithered. This way when they are superimposed you get the colour gradient we saw above.
+			</p>
+
+			<img id="Ditheringex" src="Ditheringex.png" >
 			<p>
 			The computer takes the data and moves the dotting mechanism to each pixel. It then acceses the pixel data for that coordinate. If that pixel is 'on', or black, it sends the command through to the arduino which drops the marker on that spot. Rinse repeat.
 			</p>
-			<img id="Ditheringex" src="Ditheringex.png" >
 			<p>
 			I am currently printing using acrylic ink with brushtip markers on fairly large pieces of canvas. I hope to put a small portfolio of work together for an art show.
 			</p>
