@@ -3,7 +3,7 @@
 	<head>
 		<!--
 		Author: Tom MacIntyre
-		Date:2017, September 8th
+		Date:2018, aug 9
 		Filename: Test
 		Supporting files:
 		Supporting files:
@@ -12,6 +12,8 @@
 		<title> My Site </title>
 		<meta http-equiv="refresh" content="199" >
 	<style>
+	
+	
 	p{
 		text-indent:2em;
 	}
@@ -69,21 +71,22 @@
 	}
 	
 	h2{
+
 	text-decoration: underline;
 	
 	}
 	nav{
-	
+		top:0px;
 		position:fixed;		
-		height:30px;
-		top:15px;
+		height:5px;
 		left:430px;		
-		padding-right:25px; 
-		padding-left:0px; 		
 	}
 	
+	li a{
+		height: 26px;
+	}
 	#intro{
-	
+	display:inline-block;
 	padding:.4em;
 	border-radius: 25px;
 	text-align:center;
@@ -93,8 +96,15 @@
 	font-family:"georgia",Times, serif;
 	line-height:95%;	
 	}
+	
 	#finthoughts{
 		display:inline-block;
+	}
+	#Dotsvid{
+		display:inline-block;
+		float:right;
+		padding-left:10px
+		width:50%;
 	}
 	#armvid{
 		display:inline-block;
@@ -104,7 +114,7 @@
 	#bridgevid{
 		display:inline-block;
 		float:right;
-		padding-left:10px;
+		padding-left:10px;	
 	}	
 	section{display:inline-block;}
 	#imogen{
@@ -112,9 +122,18 @@
 		text-decoration:none;
 		color:inherit;
 	}
-	#pawnsimg{width:30%;}
-	#keyboardimg{display:inline-block;float:right; margin:20px; }
+	#portrait{width:350px;}
+	#botsquirrel{width:560px; margin-left:4%; }
+	#Dotsvid{ width:300px; ; margin:20px;}
 	
+	#poolfinal{width:300px;}
+	#poolblue{width:300px;}
+	#poolyellow{width:300px;}
+	#upclose{width:300px;}
+	#Ditheringex{width:900px;}
+	
+	#keyboardimg{display:inline-block;float:right; margin:20px; }
+	#passes{display:inline-block;min-width:360px;}
 	
 	</style>
 	
@@ -126,6 +145,7 @@
 		<address>macintyre.tdm@Gmail.com</address>
 	<nav>
 		<ul>
+			<li><a href="#Dotbot">Pointillism Printer</a></li>
 			<li><a href="#3dmodel">3D Model</a></li>
 			<li><a href="#checkers">Checkers</a></li>
 			<li><a href="#keyboard">Keyboard </a></li>
@@ -141,12 +161,68 @@
 		
 		<section id="intro">
 			<p>Hi! Welcome to my site :)<br> <br>
-			I am a computer science student and hobbyist who's taken courses at Dal and NSCC. 
+			I am a computer science student and hobbyist. 
 			<br>			<br>
 			I made this site as an easy way to get examples of my work to people, and I expect it will transform over the year.
 			Cheers!
 			</p>
 		</section>
+		
+		
+		<section>
+			<h2 id="Dotbot">Pointillism Printer</h2>
+			<img id="portrait" src="portrait.jpg">
+			<img id="botsquirrel" src="botsquirrel.jpg">
+			<p>
+			The 'H' shaped contraption depicted above right is an XY printer similar to a pen plotter. It uses various markers and pens to dot onto a medium and create spotty images, such as this self portrait.
+			
+			As you should see in the photo, the printer is made of steel bars, a little servo arm that raises and lowers the marker, verticle and horizontal sliders, corner peices, timing belt, and two stepper motors hidden partially in their housings. 
+			All of it is attached to a Raspberry Pi with an attached Arduino microcontroller. I modeled the joints and sliders in Fusion 360 and had them 3D printed with PLA. The prints suffered warping. This was probably due to how fast they were printed off, as when some plastics are printed quickly, the change in temperature from when the filament melts and when it cools causes warpage. Incidentally, Nylon is supposed to be especially susceptible for warping. This critical issue was overcome surprisingly well with some choice expletives and a nauseating amount of superglue.
+			</p>
+						<video id="Dotsvid" controls >
+			  <source src="Dots.mp4" type="video/mp4">			  
+			  Your browser does not support the video tag.
+			</video>
+			<p>
+			The machine was inspired by pointillism, an art style by the french painter Georges Seurat who is most famously known for his work 'A Sunday Afternoon on the Island of La Grande Jatte (1884–1886)'. 
+			</p>
+			<p>
+			The self-portrait above was made on marker paper with a fine tip sharpie of approx 2mm in diameter. Stepper motors are motors that are designed to produce strong and precise revolutions. They are also very slow. I thought they would be faster when I got them. Resolution makes a huge difference in print time due to the amount of time it takes to produce each dot, and the flaw may be fixed in the future, however this print took about 4.5 hours. I will likely fix it by increasing the circumference of the wheel the belt is attached to so that the motors will be just as slow, but their revolutions will be faster.
+			</p>
+			<p>
+			Another interesting obstacle is the sleight white horizontal streaks through the image. I suspect that these are due to belt tension, but mostly to the fact that I had to make mechanical sacrifices because of a last minute material sourcing issue. Basically I had to sand something because the part was not to my specs and now it wiggles a millimeter to either side.
+			</p>			
+			<p>
+			The bot was initially designed for black and white, although colour images can be achieved by running three passes using CYMK process colours. The K in CMYK stands for black, which I don't actually use. We can see the stages of a colour print below.
+			</p>
+			<br><br>
+			<p>
+			We can clearly see the Cyan colouring, followed by a yellow pass. Recall that blue and yellow make green. Finally there is a Magenta pass bringing it all together.
+			</p>
+			<div id="passes">
+				<img id="poolblue" src="poolblue.jpg" >
+				<img id="poolyellow" src="poolyellow.jpg">
+				<img id="poolfinal" src="poolfinal.jpg">
+			</div>
+			<p>The major principle of pointillism is that with basic primary colours, you can dot them close together in various amounts and your eye blends them together from afar. Below is a magnified picture of a rose image to show the seperate dots better.
+			</p>
+			  
+			<img id="upclose" src="upclose.jpg" >
+			<p>
+			The programming was rather involved at first. I learned quite alot along the way though! Mostly, the Pi uses python's image library (PIL) to interpret image data. The thing about grayscale is that there is only one colour, but many different amounts of it. A marker cannot produce gradient like there is in a grayscale image. You cannot really shade with markers the way you would with a pencil. For this reason I used something called dithering, which turns images with gradient into dots.
+			There are many kinds of dithering as you can see below, but I chose Floyd-Steinberg because it seems to be the standard.
+			I also coded my own dithering program that does Floyd-Steinberg dithering. It includes a threshold that you can set to produce more or less dots. I've also coded a script for the colour prints that splits the image into three seperate images of each primary colour, which is then converted to grayscale and dithered. This way when they are superimposed you get the colour gradient we saw above.
+			</p>
+			<p>
+			The computer takes the data and moves the dotting mechanism to each pixel. It then acceses the pixel data for that coordinate. If that pixel is 'on', or black, it sends the command through to the arduino which drops the marker on that spot. Rinse repeat.
+			</p>
+			<img id="Ditheringex" src="Ditheringex.png" >
+			<p>
+			I am currently printing using acrylic ink with brushtip markers on fairly large pieces of canvas. I hope to put a small portfolio of work together for an art show.
+			</p>
+			
+		</section>
+		
 		
 		<section>
 			<h2 id="3dmodel">3D Model</h2>
@@ -207,7 +283,7 @@
 			</p>
 			<p>
 			It is also worth noting that Think() has a bug where if the first move it calculates can be countered as a multi-jump, then its brain explodes. These issues will be addressed in the new version.
-			I’m not sure whether it’s good or bad that this program is about eight hundred lines. It is definitely the most I’ve ever coded, and I’ve been chipping away at this since this past December inconsistently.  I don’t know what the standards would be for a game like this, so I have nothing to judge it against. In terms of practicality, it runs fine on my outdated Raspberry Pi, so I suppose it doesn’t really matter. 
+			I’m not sure whether it’s good or bad that this program is about eight hundred lines. It is definitely the largest program I’ve ever coded, and I’ve been chipping away at this since this past December inconsistently.  I don’t know what the standards would be for a game like this, so I have nothing to judge it against. In terms of practicality, it runs fine on my outdated Raspberry Pi, so I suppose it doesn’t really matter. 
 
 			</p>
 			
